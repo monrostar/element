@@ -1,5 +1,13 @@
 import { getPropByPath } from 'element-ui/src/utils/util';
 
+export const filteredTypes = {
+  checkboxGroup: 'checkbox-group'
+};
+
+export const defaultFilteredValue = {
+  [filteredTypes.checkboxGroup]: []
+};
+
 export const cellStarts = {
   default: {
     order: ''

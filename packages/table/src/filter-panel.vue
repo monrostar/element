@@ -2,17 +2,21 @@
   <transition name="el-zoom-in-top">
     <div
       class="el-table-filter"
-      v-if="multiple"
       v-clickoutside="handleOutsideClick"
       v-show="showPopper">
       <div class="el-table-filter__content">
         <el-scrollbar wrap-class="el-table-filter__wrap">
-          <el-checkbox-group class="el-table-filter__checkbox-group" v-model="filteredValue">
-            <el-checkbox
-              v-for="filter in filters"
-              :key="filter.value"
-              :label="filter.value">{{ filter.text }}</el-checkbox>
-          </el-checkbox-group>
+          <template v-for="filter in filters">
+            <el-checkbox-group
+              v-if="filter.type === types.checkboxGroup"
+              v-model="filteredValue[filter.type]"
+              class="el-table-filter__checkbox-group">
+              <el-checkbox v-for="(filterItem, filterItemKey) in filter.data"
+                :key="`${filterItem.value}_${filterItemKey}`"
+                :label="filterItem.value">{{ filterItem.text }}
+              </el-checkbox>
+            </el-checkbox-group>
+          </template>
         </el-scrollbar>
       </div>
       <div class="el-table-filter__bottom">
@@ -21,23 +25,6 @@
           :disabled="filteredValue.length === 0">{{ t('el.table.confirmFilter') }}</button>
         <button @click="handleReset">{{ t('el.table.resetFilter') }}</button>
       </div>
-    </div>
-    <div
-      class="el-table-filter"
-      v-else
-      v-clickoutside="handleOutsideClick"
-      v-show="showPopper">
-      <ul class="el-table-filter__list">
-        <li class="el-table-filter__list-item"
-            :class="{ 'is-active': filterValue === undefined || filterValue === null }"
-            @click="handleSelect(null)">{{ t('el.table.clearFilter') }}</li>
-        <li class="el-table-filter__list-item"
-            v-for="filter in filters"
-            :label="filter.value"
-            :key="filter.value"
-            :class="{ 'is-active': isActive(filter) }"
-            @click="handleSelect(filter.value)" >{{ filter.text }}</li>
-      </ul>
     </div>
   </transition>
 </template>
@@ -48,6 +35,7 @@
   import Locale from 'element-ui/src/mixins/locale';
   import Clickoutside from 'element-ui/src/utils/clickoutside';
   import Dropdown from './dropdown';
+  import {defaultFilteredValue, filteredTypes} from 'element-ui/packages/table/src/config.js';
   import ElCheckbox from 'element-ui/packages/checkbox';
   import ElCheckboxGroup from 'element-ui/packages/checkbox-group';
   import ElScrollbar from 'element-ui/packages/scrollbar';
@@ -91,7 +79,7 @@
       },
 
       handleReset() {
-        this.filteredValue = [];
+        this.filteredValue = {...defaultFilteredValue};
         this.confirmFilter(this.filteredValue);
         this.handleOutsideClick();
       },
@@ -102,7 +90,7 @@
         if ((typeof filterValue !== 'undefined') && (filterValue !== null)) {
           this.confirmFilter(this.filteredValue);
         } else {
-          this.confirmFilter([]);
+          this.confirmFilter({...defaultFilteredValue});
         }
 
         this.handleOutsideClick();
@@ -121,49 +109,18 @@
       return {
         table: null,
         cell: null,
-        column: null
+        column: null,
+        filteredValue: {...defaultFilteredValue}
       };
     },
 
     computed: {
+      types() {
+        return filteredTypes;
+      },
+
       filters() {
         return this.column && this.column.filters;
-      },
-
-      filterValue: {
-        get() {
-          return (this.column.filteredValue || [])[0];
-        },
-        set(value) {
-          if (this.filteredValue) {
-            if ((typeof value !== 'undefined') && (value !== null)) {
-              this.filteredValue.splice(0, 1, value);
-            } else {
-              this.filteredValue.splice(0, 1);
-            }
-          }
-        }
-      },
-
-      filteredValue: {
-        get() {
-          if (this.column) {
-            return this.column.filteredValue || [];
-          }
-          return [];
-        },
-        set(value) {
-          if (this.column) {
-            this.column.filteredValue = value;
-          }
-        }
-      },
-
-      multiple() {
-        if (this.column) {
-          return this.column.filterMultiple;
-        }
-        return true;
       }
     },
 

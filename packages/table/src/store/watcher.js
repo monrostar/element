@@ -1,3 +1,4 @@
+import {defaultFilteredValue} from 'packages/table/src/config.js';
 import Vue from 'vue';
 import merge from 'element-ui/src/utils/merge';
 import { getKeysMap, getRowIdentity, getColumnById, getColumnByKey, orderBy, toggleRowStatus } from '../util';
@@ -277,15 +278,17 @@ export default Vue.extend({
       const states = this.states;
       const { _data, filters } = states;
       let data = _data;
-
       Object.keys(filters).forEach((columnId) => {
-        const values = states.filters[columnId];
-        if (!values || values.length === 0) return;
+        const filter = states.filters[columnId];
+        if (!filter && Object.keys(filter).length === 0) return;
         const column = getColumnById(this.states, columnId);
         if (column && column.filterMethod) {
           data = data.filter((row) => {
-            return values.some(value => column.filterMethod.call(null, value, row, column));
+            return column.filterMethod.call(null, filter, row, column);
           });
+        }
+        if (column && column.filterRemoteMethod) {
+          return column.filterRemoteMethod.call(null, filter, column);
         }
       });
 
@@ -327,25 +330,25 @@ export default Vue.extend({
           const column = columns.find(col => col.id === key);
           if (column) {
             // TODO: 优化这里的代码
-            panels[key].filteredValue = [];
+            panels[key].filteredValue = defaultFilteredValue;
           }
         });
         this.commit('filterChange', {
           column: columns,
-          values: [],
+          values: defaultFilteredValue,
           silent: true,
           multi: true
         });
       } else {
         keys.forEach(key => {
           // TODO: 优化这里的代码
-          panels[key].filteredValue = [];
+          panels[key].filteredValue = defaultFilteredValue;
         });
 
         states.filters = {};
         this.commit('filterChange', {
           column: {},
-          values: [],
+          values: defaultFilteredValue,
           silent: true
         });
       }

@@ -1005,8 +1005,19 @@ Filter the table to find desired data.
       sortable
       width="180"
       column-key="date"
-      :filters="[{text: '2016-05-01', value: '2016-05-01'}, {text: '2016-05-02', value: '2016-05-02'}, {text: '2016-05-03', value: '2016-05-03'}, {text: '2016-05-04', value: '2016-05-04'}]"
+      :filters="[
+        {
+         type: 'checkbox-group',
+         data: [
+           {text: '2016-05-01', value: '2016-05-01'},
+           {text: '2016-05-02', value: '2016-05-02'},
+           {text: '2016-05-03', value: '2016-05-03'},
+           {text: '2016-05-04', value: '2016-05-04'},
+         ]
+        }
+      ]"
       :filter-method="filterHandler"
+      :filter-remote-method="filterRemoteHandler"
     >
     </el-table-column>
     <el-table-column
@@ -1023,8 +1034,17 @@ Filter the table to find desired data.
       prop="tag"
       label="Tag"
       width="100"
-      :filters="[{ text: 'Home', value: 'Home' }, { text: 'Office', value: 'Office' }]"
+      :filters="[
+        {
+         type: 'checkbox-group',
+         data: [
+           {text: 'Home', value: 'Home'},
+           {text: 'Office', value: 'Office'},
+         ]
+        }
+      ]"
       :filter-method="filterTag"
+      :filter-remote-method="filterRemoteTag"
       filter-placement="bottom-end">
       <template slot-scope="scope">
         <el-tag
@@ -1075,9 +1095,15 @@ Filter the table to find desired data.
       filterTag(value, row) {
         return row.tag === value;
       },
+      filterRemoteTag(value, column) {
+        // implement remote filter request
+      },
       filterHandler(value, row, column) {
         const property = column['property'];
         return row[property] === value;
+      }
+      filterRemoteHandler(value, row, column) {
+        // implement remote filter request
       }
     }
   }
