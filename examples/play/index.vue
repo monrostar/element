@@ -13,16 +13,63 @@
         width="180"
         column-key="date"
         :filters="[
-          {
-           type: 'checkbox-group',
-           data: [
-             {text: '2016-05-01', value: '2016-05-01'},
-             {text: '2016-05-02', value: '2016-05-02'},
-             {text: '2016-05-03', value: '2016-05-03'},
-             {text: '2016-05-04', value: '2016-05-04'},
-           ]
-          }
-        ]"
+        {
+         type: 'checkbox-group',
+         name: 'filter1',
+         data: [
+           {text: '2016-05-01', value: '2016-05-01'},
+           {text: '2016-05-02', value: '2016-05-02'},
+           {text: '2016-05-03', value: '2016-05-03'},
+           {text: '2016-05-04', value: '2016-05-04'},
+         ]
+        },
+        {
+         type: 'input',
+         name: 'filter2',
+         data: {
+            placeholder: 'This text input',
+            size: 'medium',
+         }
+        },
+        {
+         type: 'date-range',
+         name: 'filter3',
+         data: {}
+        },
+        {
+         type: 'input-range',
+         name: 'filter4',
+         data: {}
+        },
+        {
+         type: 'slider-range',
+         name: 'filter5',
+         data: {
+           step: 0.0001,
+           min: 0,
+           max: 1000
+         }
+        },
+        {
+         type: 'select',
+         name: 'filter6',
+         data: {
+          options: [{
+            value: '2016-05-01',
+            label: '2016-05-01'
+          }, {
+            value: '2016-05-02',
+            label: '2016-05-02'
+          }, {
+            value: '2016-05-03',
+            label: '2016-05-03'
+          }, {
+            value: '2016-05-04',
+            label: '2016-05-04'
+          }],
+         },
+        }
+      ]"
         :filter-remote-method="filterHandler"
       >
       </el-table-column>
@@ -43,6 +90,7 @@
         :filters="[
           {
            type: 'checkbox-group',
+           name: 'first',
            data: [
              {text: 'Home', value: 'Home'},
              {text: 'Office', value: 'Office'},

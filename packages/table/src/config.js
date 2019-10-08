@@ -1,11 +1,12 @@
 import { getPropByPath } from 'element-ui/src/utils/util';
 
 export const filteredTypes = {
-  checkboxGroup: 'checkbox-group'
-};
-
-export const defaultFilteredValue = {
-  [filteredTypes.checkboxGroup]: []
+  checkboxGroup: 'checkbox-group',
+  input: 'input',
+  dateRange: 'date-range',
+  select: 'select',
+  sliderRange: 'slider-range',
+  inputRange: 'input-range'
 };
 
 export const cellStarts = {

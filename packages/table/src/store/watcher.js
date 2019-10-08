@@ -1,4 +1,3 @@
-import {defaultFilteredValue} from 'packages/table/src/config.js';
 import Vue from 'vue';
 import merge from 'element-ui/src/utils/merge';
 import { getKeysMap, getRowIdentity, getColumnById, getColumnByKey, orderBy, toggleRowStatus } from '../util';
@@ -330,25 +329,25 @@ export default Vue.extend({
           const column = columns.find(col => col.id === key);
           if (column) {
             // TODO: 优化这里的代码
-            panels[key].filteredValue = defaultFilteredValue;
+            panels[key].filteredValue = {};
           }
         });
         this.commit('filterChange', {
           column: columns,
-          values: defaultFilteredValue,
+          values: {},
           silent: true,
           multi: true
         });
       } else {
         keys.forEach(key => {
           // TODO: 优化这里的代码
-          panels[key].filteredValue = defaultFilteredValue;
+          panels[key].filteredValue = {};
         });
 
         states.filters = {};
         this.commit('filterChange', {
           column: {},
-          values: defaultFilteredValue,
+          values: {},
           silent: true
         });
       }

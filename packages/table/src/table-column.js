@@ -41,7 +41,7 @@ export default {
     reserveSelection: Boolean,
     filterMethod: Function,
     filterRemoteMethod: Function,
-    filteredValue: Array,
+    filteredValue: Object,
     filters: Array,
     filterPlacement: String,
     index: [Number, Function],
@@ -266,7 +266,7 @@ export default {
       showOverflowTooltip: this.showOverflowTooltip || this.showTooltipWhenOverflow,
       // filter 相关属性
       filterable: this.filters || this.filterMethod || this.filterRemoteMethod,
-      filteredValue: [],
+      filteredValue: {},
       filterPlacement: '',
       isColumnGroup: false,
       filterOpened: false,
