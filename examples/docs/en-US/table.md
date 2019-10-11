@@ -1148,7 +1148,7 @@ Filter the table to find desired data.
       filterHandler(value, row, column) {
         const property = column['property'];
         return row[property] === value;
-      }
+      },
       filterRemoteHandler(value, row, column) {
         // implement remote filter request
       }

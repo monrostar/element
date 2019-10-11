@@ -215,6 +215,7 @@ export default {
   MenuItem,
   MenuItemGroup,
   Input,
+  InputRange,
   InputNumber,
   Radio,
   RadioGroup,
