@@ -2,42 +2,93 @@
   <transition name="el-zoom-in-top">
     <div
       class="el-table-filter"
-      v-if="multiple"
-      v-clickoutside="handleOutsideClick"
       v-show="showPopper">
       <div class="el-table-filter__content">
         <el-scrollbar wrap-class="el-table-filter__wrap">
-          <el-checkbox-group class="el-table-filter__checkbox-group" v-model="filteredValue">
-            <el-checkbox
-              v-for="filter in filters"
-              :key="filter.value"
-              :label="filter.value">{{ filter.text }}</el-checkbox>
-          </el-checkbox-group>
+          <template v-for="filter in filters">
+
+            <section v-if="filter.type === types.checkboxGroup" class="el-table-filter__checkbox-group">
+              <el-checkbox-group
+                v-model="filteredValue[filter.name]"
+              >
+                <el-checkbox v-for="(filterItem, filterItemKey) in filter.data"
+                  :key="`${filterItem.value}_${filterItemKey}`"
+                  :label="filterItem.value">{{ filterItem.text }}
+                </el-checkbox>
+              </el-checkbox-group>
+            </section>
+
+            <section v-if="filter.type === types.input" class="el-table-filter__input">
+              <el-form v-if="filter.data.label && filter.data.label !== ''" :label-position="filter.data.labelPosition || 'top'">
+                <el-form-item :label="filter.data.label">
+                  <el-input
+                    v-model="filteredValue[filter.name]"
+                    :placeholder="filter.data.placeholder || ''"
+                    :size="filter.data.size"
+                  ></el-input>
+                </el-form-item>
+              </el-form>
+              <el-input v-else
+                v-model="filteredValue[filter.name]"
+                :placeholder="filter.data.placeholder || ''"
+                :size="filter.data.size"
+              ></el-input>
+            </section>
+
+            <section v-if="filter.type === types.inputRange" class="el-table-filter__input-range">
+              <el-input-range
+                v-model="filteredValue[filter.name]"
+                :start-placeholder="filter.data.startPlaceholder && filter.data.startPlaceholder || ''"
+                :end-placeholder="filter.data.endPlaceholder && filter.data.endPlaceholder || ''"
+                :size="filter.data.size && filter.data.size"
+              ></el-input-range>
+            </section>
+
+            <section  v-if="filter.type === types.dateRange" class="el-table-filter__date-range">
+              <el-date-picker
+                v-model="filteredValue[filter.name]"
+                type="daterange"
+                align="right"
+                unlink-panels
+                :range-separator="filter.data.rangeSeparator || 'To'"
+                :start-placeholder=" filter.data.startPlaceholder || 'Start date'"
+                :end-placeholder="filter.data.endPlaceholder || 'End date'"
+                :picker-options="filter.data.pickerOptions || {}">
+              </el-date-picker>
+            </section>
+
+            <section  v-if="filter.type === types.select" class="el-table-filter__select">
+              <el-select v-model="filteredValue[filter.name]" :placeholder="filter.data.placeholder">
+                <el-option
+                  v-for="item in filter.data.options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </section>
+
+            <section  v-if="filter.type === types.sliderRange" class="el-table-filter__slider-range">
+              <div class="block">
+                <el-slider
+                  v-model="filteredValue[filter.name]"
+                  range
+                  :step="filter.data.step || 1"
+                  :max="filter.data.max || 1000"
+                  :min="filter.data.min || 0"
+                >
+                </el-slider>
+              </div>
+            </section>
+
+          </template>
         </el-scrollbar>
       </div>
       <div class="el-table-filter__bottom">
-        <button @click="handleConfirm"
-          :class="{ 'is-disabled': filteredValue.length === 0 }"
-          :disabled="filteredValue.length === 0">{{ t('el.table.confirmFilter') }}</button>
+        <button @click="handleConfirm">{{ t('el.table.confirmFilter') }}
+        </button>
         <button @click="handleReset">{{ t('el.table.resetFilter') }}</button>
       </div>
-    </div>
-    <div
-      class="el-table-filter"
-      v-else
-      v-clickoutside="handleOutsideClick"
-      v-show="showPopper">
-      <ul class="el-table-filter__list">
-        <li class="el-table-filter__list-item"
-            :class="{ 'is-active': filterValue === undefined || filterValue === null }"
-            @click="handleSelect(null)">{{ t('el.table.clearFilter') }}</li>
-        <li class="el-table-filter__list-item"
-            v-for="filter in filters"
-            :label="filter.value"
-            :key="filter.value"
-            :class="{ 'is-active': isActive(filter) }"
-            @click="handleSelect(filter.value)" >{{ filter.text }}</li>
-      </ul>
     </div>
   </transition>
 </template>
@@ -48,6 +99,7 @@
   import Locale from 'element-ui/src/mixins/locale';
   import Clickoutside from 'element-ui/src/utils/clickoutside';
   import Dropdown from './dropdown';
+  import {filteredTypes} from 'element-ui/packages/table/src/config.js';
   import ElCheckbox from 'element-ui/packages/checkbox';
   import ElCheckboxGroup from 'element-ui/packages/checkbox-group';
   import ElScrollbar from 'element-ui/packages/scrollbar';
@@ -90,8 +142,12 @@
         this.handleOutsideClick();
       },
 
+      setDefaultFilteredValue() {
+        this.filteredValue = {};
+      },
+
       handleReset() {
-        this.filteredValue = [];
+        this.setDefaultFilteredValue();
         this.confirmFilter(this.filteredValue);
         this.handleOutsideClick();
       },
@@ -102,7 +158,7 @@
         if ((typeof filterValue !== 'undefined') && (filterValue !== null)) {
           this.confirmFilter(this.filteredValue);
         } else {
-          this.confirmFilter([]);
+          this.setDefaultFilteredValue();
         }
 
         this.handleOutsideClick();
@@ -121,49 +177,18 @@
       return {
         table: null,
         cell: null,
-        column: null
+        column: null,
+        filteredValue: {}
       };
     },
 
     computed: {
+      types() {
+        return filteredTypes;
+      },
+
       filters() {
         return this.column && this.column.filters;
-      },
-
-      filterValue: {
-        get() {
-          return (this.column.filteredValue || [])[0];
-        },
-        set(value) {
-          if (this.filteredValue) {
-            if ((typeof value !== 'undefined') && (value !== null)) {
-              this.filteredValue.splice(0, 1, value);
-            } else {
-              this.filteredValue.splice(0, 1);
-            }
-          }
-        }
-      },
-
-      filteredValue: {
-        get() {
-          if (this.column) {
-            return this.column.filteredValue || [];
-          }
-          return [];
-        },
-        set(value) {
-          if (this.column) {
-            this.column.filteredValue = value;
-          }
-        }
-      },
-
-      multiple() {
-        if (this.column) {
-          return this.column.filterMultiple;
-        }
-        return true;
       }
     },
 

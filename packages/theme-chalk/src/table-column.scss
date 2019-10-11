@@ -94,4 +94,28 @@
       margin-bottom: 0;
     }
   }
+
+  @include e(input) {
+    padding: 10px;
+  }
+
+  @include e(input-range) {
+    padding: 10px;
+  }
+
+  @include e(select) {
+    padding: 10px;
+  }
+
+  @include e(date-range) {
+    padding: 10px;
+  }
+
+  @include e(slider-range) {
+    padding: 10px 30px;
+  }
+
+  @include e(select) {
+    padding: 10px;
+  }
 }

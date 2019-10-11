@@ -10,6 +10,7 @@
   "menu-item": "./packages/menu-item/index.js",
   "menu-item-group": "./packages/menu-item-group/index.js",
   "input": "./packages/input/index.js",
+  "input-range": "./packages/input-range/index.js",
   "input-number": "./packages/input-number/index.js",
   "radio": "./packages/radio/index.js",
   "radio-group": "./packages/radio-group/index.js",

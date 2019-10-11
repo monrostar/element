@@ -132,7 +132,7 @@
       },
 
       store() {
-        return this._checkboxGroup ? this._checkboxGroup.value : this.value;
+        return this._checkboxGroup ? this._checkboxGroup.value || [] : this.value || [];
       },
 
       /* used to make the isDisabled judgment under max/min props */

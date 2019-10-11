@@ -31,6 +31,7 @@ import { ElForm } from './form'
 import { ElFormItem } from './form-item'
 import { ElHeader } from './header'
 import { ElInput } from './input'
+import { ElInputRange } from './input-range'
 import { ElInputNumber } from './input-number'
 import { ElLoading } from './loading'
 import { ElMain } from './main'
@@ -208,6 +209,9 @@ export class Header extends ElHeader {}
 
 /** Input Component */
 export class Input extends ElInput {}
+
+/** InputRange Component */
+export class InputRange extends ElInputRange {}
 
 /** Input Number Component */
 export class InputNumber extends ElInputNumber {}

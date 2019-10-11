@@ -56,6 +56,9 @@ export declare class ElCascader<V = any, D = CascaderOption> extends ElementUICo
   /** filter method to match options according to input keyword */
   filterMethod: (node: CascaderNode<V, D>, keyword: string) => boolean
 
+  /** remote filter method to match options according to input keyword by column */
+  filterRemoteMethod: (node: CascaderNode<V, D>, keyword: string) => boolean
+
   /** Debounce delay when typing filter keyword, in millisecond */
   debounce: number
 
