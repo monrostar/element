@@ -273,23 +273,25 @@ export default Vue.extend({
       this.states.sortOrder = order;
     },
 
-    execFilter() {
+    execFilter({filter} = {filter: true}) {
       const states = this.states;
       const { _data, filters } = states;
       let data = _data;
-      Object.keys(filters).forEach((columnId) => {
-        const filter = states.filters[columnId];
-        if (!filter && Object.keys(filter).length === 0) return;
-        const column = getColumnById(this.states, columnId);
-        if (column && column.filterMethod) {
-          data = data.filter((row) => {
-            return column.filterMethod.call(null, filter, row, column);
-          });
-        }
-        if (column && column.filterRemoteMethod) {
-          return column.filterRemoteMethod.call(null, filter, column);
-        }
-      });
+      if (filter) {
+        Object.keys(filters).forEach((columnId) => {
+          const filter = states.filters[columnId];
+          if (!filter && Object.keys(filter).length === 0) return;
+          const column = getColumnById(this.states, columnId);
+          if (column && column.filterMethod) {
+            data = data.filter((row) => {
+              return column.filterMethod.call(null, filter, row, column);
+            });
+          }
+          if (column && column.filterRemoteMethod) {
+            return column.filterRemoteMethod.call(null, filter, column);
+          }
+        });
+      }
 
       states.filteredData = data;
     },
@@ -300,10 +302,8 @@ export default Vue.extend({
     },
 
     // 根据 filters 与 sort 去过滤 data
-    execQuery(ignore) {
-      if (!(ignore && ignore.filter)) {
-        this.execFilter();
-      }
+    execQuery({filter} = {filter: true}) {
+      this.execFilter({filter});
       this.execSort();
     },
 

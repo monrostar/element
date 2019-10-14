@@ -6,7 +6,7 @@ Watcher.prototype.mutations = {
   setData(states, data) {
     const dataInstanceChanged = states._data !== data;
     states._data = data;
-    this.execQuery({ filter: true });
+    this.execQuery({ filter: false });
     // 数据变化，更新部分数据。
     // 没有使用 computed，而是手动更新部分数据 https://github.com/vuejs/vue/issues/6660#issuecomment-331417140
     this.updateCurrentRowData();
@@ -85,8 +85,7 @@ Watcher.prototype.mutations = {
       states.sortingColumn = null;
       states.sortProp = null;
     }
-    const ingore = { filter: true };
-    this.execQuery(ingore);
+    this.execQuery({ filter: false });
 
     if (!options || !(options.silent || options.init)) {
       this.table.$emit('sort-change', {
