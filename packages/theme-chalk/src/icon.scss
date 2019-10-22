@@ -1,5 +1,11 @@
 @import "common/var";
 
+$fa-font-path: $--font-path;
+@import "../../../node_modules/@fortawesome/fontawesome-free/scss/fontawesome";
+@import "../../../node_modules/@fortawesome/fontawesome-free/scss/brands";
+@import "../../../node_modules/@fortawesome/fontawesome-free/scss/regular";
+@import "../../../node_modules/@fortawesome/fontawesome-free/scss/solid";
+
 @font-face {
   font-family: 'element-icons';
   src: url('#{$--font-path}/element-icons.woff') format('woff'), /* chrome, firefox */
