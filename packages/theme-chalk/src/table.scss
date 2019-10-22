@@ -525,8 +525,13 @@
 
     & i {
       color: $--color-info;
-      font-size: 12px;
+      font-size: 14px;
       transform: scale(.75);
+    }
+
+    & .el-icon-arrow-up {
+      text-decoration: underline;
+      font-weight: 600;
     }
   }
 

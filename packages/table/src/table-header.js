@@ -129,7 +129,11 @@ export default {
                         column.filterable ? (<span
                           class="el-table__column-filter-trigger"
                           on-click={ ($event) => this.handleFilterClick($event, column) }>
-                          <i class={ ['el-icon-arrow-down', column.filterOpened ? 'el-icon-arrow-up' : ''] }></i>
+                          <i class='fas fa-filter'/>
+                          <i class={ [
+                            column.filterOpened
+                              ? 'el-icon-arrow-up'
+                              : ''] }/>
                         </span>) : ''
                       }
                     </div>
