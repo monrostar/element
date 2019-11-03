@@ -85,8 +85,8 @@
         </el-scrollbar>
       </div>
       <div class="el-table-filter__bottom">
-        <el-button @click="handleReset" size="small" type="success">{{ t('el.table.resetFilter') }}</el-button>
-        <el-button @click="handleConfirm" size="small" type="danger">{{ t('el.table.confirmFilter') }}
+        <el-button @click="handleReset" size="small" type="danger">{{ t('el.table.resetFilter') }}</el-button>
+        <el-button @click="handleConfirm" size="small" type="success">{{ t('el.table.confirmFilter') }}
         </el-button>
       </div>
     </div>
